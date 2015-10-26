@@ -104,7 +104,6 @@ class ParticleCommand extends VanillaCommand{
 			return true;
 		}
 
-
 		$sender->sendMessage(new TranslationContainer("commands.particle.success", [$name, $count]));
 
 		$random = new Random((int) (microtime(true) * 1000) + mt_rand());
@@ -190,7 +189,6 @@ class ParticleCommand extends VanillaCommand{
 				return new HappyVillagerParticle($pos);
 			case "angryvillager":
 				return new AngryVillagerParticle($pos);
-
 		}
 
 		if(substr($name, 0, 10) === "iconcrack_"){

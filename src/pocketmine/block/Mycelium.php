@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -33,7 +33,6 @@ class Mycelium extends Solid{
 	protected $id = self::MYCELIUM;
 
 	public function __construct(){
-
 	}
 
 	public function getName(){

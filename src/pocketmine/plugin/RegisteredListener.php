@@ -46,13 +46,12 @@ class RegisteredListener{
 	/** @var TimingsHandler */
 	private $timings;
 
-
 	/**
-	 * @param Listener       $listener
-	 * @param EventExecutor  $executor
-	 * @param int            $priority
-	 * @param Plugin         $plugin
-	 * @param boolean        $ignoreCancelled
+	 * @param Listener $listener
+	 * @param EventExecutor $executor
+	 * @param int $priority
+	 * @param Plugin $plugin
+	 * @param boolean $ignoreCancelled
 	 * @param TimingsHandler $timings
 	 */
 	public function __construct(Listener $listener, EventExecutor $executor, $priority, Plugin $plugin, $ignoreCancelled, TimingsHandler $timings){

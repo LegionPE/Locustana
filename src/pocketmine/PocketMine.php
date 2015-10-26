@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -63,18 +63,17 @@ namespace {
 	}
 
 	function dummy(){
-
 	}
 }
 
 namespace pocketmine {
+
 	use pocketmine\utils\Binary;
 	use pocketmine\utils\Config;
 	use pocketmine\utils\MainLogger;
 	use pocketmine\utils\ServerKiller;
 	use pocketmine\utils\Terminal;
 	use pocketmine\utils\Utils;
-	use pocketmine\wizard\Installer;
 
 	const VERSION = "1.6dev";
 	const API_VERSION = "1.13.0";
@@ -113,7 +112,6 @@ namespace pocketmine {
 	$autoloader->addPath(\pocketmine\PATH . "src" . DIRECTORY_SEPARATOR . "spl");
 	$autoloader->register(true);
 
-
 	set_time_limit(0); //Who set it to 30 seconds?!?!
 
 	gc_enable();
@@ -148,11 +146,11 @@ namespace pocketmine {
 	}
 
 	$tmpKatanaProperties = new Config("katana.yml", Config::YAML, []);
-	$saveLog =  $tmpKatanaProperties->getNested("console.save-console", true);
+	$saveLog = $tmpKatanaProperties->getNested("console.save-console", true);
 	$logger = new MainLogger(\pocketmine\DATA . "server.log", \pocketmine\ANSI, $saveLog);
-	if($saveLog) {
+	if($saveLog){
 		$logger->info("Writing logs to server.log");
-	} else {
+	}else{
 		$logger->info("Server logging disabled");
 	}
 
@@ -335,7 +333,7 @@ namespace pocketmine {
 
 	/**
 	 * @param object $value
-	 * @param bool   $includeCurrent
+	 * @param bool $includeCurrent
 	 *
 	 * @return int
 	 */
@@ -469,10 +467,6 @@ namespace pocketmine {
 	@define("INT32_MASK", is_int(0xffffffff) ? 0xffffffff : -1);
 	@ini_set("opcache.mmap_base", bin2hex(Utils::getRandomBytes(8, false))); //Fix OPCache address errors
 
-	if(!file_exists(\pocketmine\DATA . "server.properties") and !isset($opts["no-wizard"])){
-		new Installer();
-	}
-
 	if(\Phar::running(true) === ""){
 		$logger->warning("Non-packaged Katana installation detected, do not use on production.");
 	}
@@ -497,5 +491,4 @@ namespace pocketmine {
 	echo Terminal::$FORMAT_RESET . "\n";
 
 	exit(0);
-
 }

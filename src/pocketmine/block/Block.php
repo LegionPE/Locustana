@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -25,8 +25,6 @@
 namespace pocketmine\block;
 
 use pocketmine\entity\Entity;
-
-
 use pocketmine\item\Item;
 use pocketmine\item\Tool;
 use pocketmine\level\Level;
@@ -38,7 +36,6 @@ use pocketmine\metadata\Metadatable;
 use pocketmine\metadata\MetadataValue;
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
-
 
 class Block extends Position implements Metadatable{
 	const AIR = 0;
@@ -76,7 +73,6 @@ class Block extends Position implements Metadatable{
 	const SANDSTONE = 24;
 
 	const BED_BLOCK = 26;
-
 
 	const COBWEB = 30;
 	const TALL_GRASS = 31;
@@ -152,7 +148,6 @@ class Block extends Position implements Metadatable{
 	const GLOWSTONE = 89;
 	const GLOWSTONE_BLOCK = 89;
 
-
 	const LIT_PUMPKIN = 91;
 	const JACK_O_LANTERN = 91;
 	const CAKE_BLOCK = 92;
@@ -181,7 +176,7 @@ class Block extends Position implements Metadatable{
 	const LILY_PAD = 111;
 	const NETHER_BRICKS = 112;
 	const NETHER_BRICK_BLOCK = 112;
-
+	const NETHER_BRICK_FENCE = 113;
 	const NETHER_BRICKS_STAIRS = 114;
 
 	const ENCHANTING_TABLE = 116;
@@ -413,7 +408,7 @@ class Block extends Position implements Metadatable{
 			self::$list[self::MYCELIUM] = Mycelium::class;
 			self::$list[self::WATER_LILY] = WaterLily::class;
 			self::$list[self::NETHER_BRICKS] = NetherBrick::class;
-
+			self::$list[self::NETHER_BRICK_FENCE] = NetherBrickFence::class;
 			self::$list[self::NETHER_BRICKS_STAIRS] = NetherBrickStairs::class;
 
 			self::$list[self::ENCHANTING_TABLE] = EnchantingTable::class;
@@ -505,8 +500,8 @@ class Block extends Position implements Metadatable{
 	}
 
 	/**
-	 * @param int      $id
-	 * @param int      $meta
+	 * @param int $id
+	 * @param int $meta
 	 * @param Position $pos
 	 *
 	 * @return Block
@@ -545,13 +540,13 @@ class Block extends Position implements Metadatable{
 	/**
 	 * Places the Block, using block space and block target, and side. Returns if the block has been placed.
 	 *
-	 * @param Item   $item
-	 * @param Block  $block
-	 * @param Block  $target
-	 * @param int    $face
-	 * @param float  $fx
-	 * @param float  $fy
-	 * @param float  $fz
+	 * @param Item $item
+	 * @param Block $block
+	 * @param Block $target
+	 * @param int $face
+	 * @param float $fx
+	 * @param float $fy
+	 * @param float $fz
 	 * @param Player $player = null
 	 *
 	 * @return bool
@@ -590,13 +585,12 @@ class Block extends Position implements Metadatable{
 	 * @return void
 	 */
 	public function onUpdate($type){
-
 	}
 
 	/**
 	 * Do actions when activated by Item. Returns if it has done anything
 	 *
-	 * @param Item   $item
+	 * @param Item $item
 	 * @param Player $player
 	 *
 	 * @return bool
@@ -710,7 +704,6 @@ class Block extends Position implements Metadatable{
 	}
 
 	public function addVelocityToEntity(Entity $entity, Vector3 $vector){
-
 	}
 
 	/**
@@ -847,7 +840,6 @@ class Block extends Position implements Metadatable{
 	 * @param Entity $entity
 	 */
 	public function onEntityCollide(Entity $entity){
-
 	}
 
 	/**
@@ -885,12 +877,12 @@ class Block extends Position implements Metadatable{
 		if($bb === null){
 			return null;
 		}
-        $intermediateVectors = $bb->getIntermediateVectorsArray($pos1, $pos2);
-        $vector = $bb->calculateInterceptVector($pos1, $intermediateVectors);
-        if($vector === null){
-            return null;
-        }
-        $f = $bb->calculateInterceptSide($vector, $intermediateVectors);
+		$intermediateVectors = $bb->getIntermediateVectorsArray($pos1, $pos2);
+		$vector = $bb->calculateInterceptVector($pos1, $intermediateVectors);
+		if($vector === null){
+			return null;
+		}
+		$f = $bb->calculateInterceptSide($vector, $intermediateVectors);
 		return MovingObjectPosition::fromBlock($this->x, $this->y, $this->z, $f, $vector->add($this->x, $this->y, $this->z));
 	}
 

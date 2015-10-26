@@ -35,11 +35,10 @@ class EntityRegainHealthEvent extends EntityEvent implements Cancellable{
 	private $amount;
 	private $reason;
 
-
 	/**
 	 * @param Entity $entity
-	 * @param float  $amount
-	 * @param int    $regainReason
+	 * @param float $amount
+	 * @param int $regainReason
 	 */
 	public function __construct(Entity $entity, $amount, $regainReason){
 		$this->entity = $entity;

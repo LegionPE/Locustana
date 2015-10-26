@@ -92,9 +92,9 @@ class Permission{
 	/**
 	 * Creates a new Permission object to be attached to Permissible objects
 	 *
-	 * @param string       $name
-	 * @param string       $description
-	 * @param string       $defaultValue
+	 * @param string $name
+	 * @param string $description
+	 * @param string $defaultValue
 	 * @param Permission[] $children
 	 */
 	public function __construct($name, $description = null, $defaultValue = null, array $children = []){
@@ -168,7 +168,6 @@ class Permission{
 		}
 	}
 
-
 	/**
 	 * @param string|Permission $name
 	 * @param                   $value
@@ -210,9 +209,9 @@ class Permission{
 
 	/**
 	 * @param string $name
-	 * @param array  $data
+	 * @param array $data
 	 * @param string $default
-	 * @param array  $output
+	 * @param array $output
 	 *
 	 * @return Permission
 	 *
@@ -250,8 +249,6 @@ class Permission{
 		}
 
 		return new Permission($name, $desc, $default, $children);
-
 	}
-
 
 }

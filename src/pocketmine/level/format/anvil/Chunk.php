@@ -32,7 +32,6 @@ use pocketmine\nbt\tag\Enum;
 use pocketmine\nbt\tag\Int;
 use pocketmine\nbt\tag\IntArray;
 use pocketmine\nbt\tag\Long;
-use pocketmine\Player;
 use pocketmine\utils\Binary;
 use pocketmine\utils\BinaryStream;
 
@@ -163,7 +162,7 @@ class Chunk extends BaseChunk{
 	}
 
 	/**
-	 * @param string        $data
+	 * @param string $data
 	 * @param LevelProvider $provider
 	 *
 	 * @return Chunk
@@ -186,7 +185,7 @@ class Chunk extends BaseChunk{
 	}
 
 	/**
-	 * @param string        $data
+	 * @param string $data
 	 * @param LevelProvider $provider
 	 *
 	 * @return Chunk
@@ -237,17 +236,18 @@ class Chunk extends BaseChunk{
 
 		$nbt->HeightMap = new IntArray("HeightMap", $this->getHeightMapArray());
 
-        $writer = $this->prepareChunkBinaryWriter($nbt);
+		$writer = $this->prepareChunkBinaryWriter($nbt);
 
-        if($compressed === false)
-            return $writer->write();
-        else
-            return $writer->writeCompressed(ZLIB_ENCODING_DEFLATE, RegionLoader::$COMPRESSION_LEVEL);
+		if($compressed === false){
+			return $writer->write();
+		}else{
+			return $writer->writeCompressed(ZLIB_ENCODING_DEFLATE, RegionLoader::$COMPRESSION_LEVEL);
+		}
 	}
 
 	/**
-	 * @param int           $chunkX
-	 * @param int           $chunkZ
+	 * @param int $chunkX
+	 * @param int $chunkZ
 	 * @param LevelProvider $provider
 	 *
 	 * @return Chunk

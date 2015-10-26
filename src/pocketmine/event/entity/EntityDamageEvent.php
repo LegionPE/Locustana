@@ -50,16 +50,14 @@ class EntityDamageEvent extends EntityEvent implements Cancellable{
 	const CAUSE_MAGIC = 13;
 	const CAUSE_CUSTOM = 14;
 
-
 	private $cause;
 	/** @var array */
 	private $modifiers;
 	private $originals;
 
-
 	/**
-	 * @param Entity    $entity
-	 * @param int       $cause
+	 * @param Entity $entity
+	 * @param int $cause
 	 * @param int|int[] $damage
 	 *
 	 * @throws \Exception
@@ -121,7 +119,7 @@ class EntityDamageEvent extends EntityEvent implements Cancellable{
 
 	/**
 	 * @param float $damage
-	 * @param int   $type
+	 * @param int $type
 	 *
 	 * @throws \UnexpectedValueException
 	 */

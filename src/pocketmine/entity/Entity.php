@@ -53,11 +53,9 @@ use pocketmine\nbt\tag\Float;
 use pocketmine\nbt\tag\Int;
 use pocketmine\nbt\tag\Short;
 use pocketmine\nbt\tag\String;
-use pocketmine\network\Network;
 use pocketmine\network\protocol\MobEffectPacket;
 use pocketmine\network\protocol\RemoveEntityPacket;
 use pocketmine\network\protocol\SetEntityDataPacket;
-
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\Server;
@@ -69,9 +67,7 @@ use pocketmine\utils\ChunkException;
 
 abstract class Entity extends Location implements Metadatable{
 
-
 	const NETWORK_ID = -1;
-
 
 	const DATA_TYPE_BYTE = 0;
 	const DATA_TYPE_SHORT = 1;
@@ -90,8 +86,7 @@ abstract class Entity extends Location implements Metadatable{
 	const DATA_SILENT = 4;
 	const DATA_POTION_COLOR = 7;
 	const DATA_POTION_AMBIENT = 8;
-    const DATA_NO_AI = 15;
-
+	const DATA_NO_AI = 15;
 
 	const DATA_FLAG_ONFIRE = 0;
 	const DATA_FLAG_SNEAKING = 1;
@@ -99,7 +94,6 @@ abstract class Entity extends Location implements Metadatable{
 	const DATA_FLAG_SPRINTING = 3;
 	const DATA_FLAG_ACTION = 4;
 	const DATA_FLAG_INVISIBLE = 5;
-
 
 	public static $entityCount = 1;
 	/** @var Entity[] */
@@ -208,7 +202,6 @@ abstract class Entity extends Location implements Metadatable{
 	protected $timings;
 	protected $isPlayer = false;
 
-
 	public function __construct(FullChunk $chunk, Compound $nbt){
 		if($chunk === null or $chunk->getProvider() === null){
 			throw new ChunkException("Invalid garbage Chunk given to Entity");
@@ -276,7 +269,6 @@ abstract class Entity extends Location implements Metadatable{
 		$this->server->getPluginManager()->callEvent(new EntitySpawnEvent($this));
 
 		$this->scheduleUpdate();
-
 	}
 
 	/**
@@ -410,8 +402,8 @@ abstract class Entity extends Location implements Metadatable{
 
 	/**
 	 * @param int|string $type
-	 * @param FullChunk  $chunk
-	 * @param Compound   $nbt
+	 * @param FullChunk $chunk
+	 * @param Compound $nbt
 	 * @param            $args
 	 *
 	 * @return Entity
@@ -518,7 +510,6 @@ abstract class Entity extends Location implements Metadatable{
 			}
 		}
 
-
 		if(isset($this->namedtag->CustomName)){
 			$this->setNameTag($this->namedtag["CustomName"]);
 			if(isset($this->namedtag->CustomNameVisible)){
@@ -595,41 +586,42 @@ abstract class Entity extends Location implements Metadatable{
 	}
 
 	/**
-	 * @param float             $damage
+	 * @param float $damage
 	 * @param EntityDamageEvent $source
 	 *
 	 */
-    public function attack($damage, EntityDamageEvent $source){
-        if($this->hasEffect(Effect::FIRE_RESISTANCE)
-            and $source->getCause() === EntityDamageEvent::CAUSE_FIRE
-            and $source->getCause() === EntityDamageEvent::CAUSE_FIRE_TICK
-            and $source->getCause() === EntityDamageEvent::CAUSE_LAVA){
-            $source->setCancelled();
-        }
+	public function attack($damage, EntityDamageEvent $source){
+		if($this->hasEffect(Effect::FIRE_RESISTANCE)
+			and $source->getCause() === EntityDamageEvent::CAUSE_FIRE
+			and $source->getCause() === EntityDamageEvent::CAUSE_FIRE_TICK
+			and $source->getCause() === EntityDamageEvent::CAUSE_LAVA
+		){
+			$source->setCancelled();
+		}
 
-        $this->server->getPluginManager()->callEvent($source);
-        if($source->isCancelled()){
-            return;
-        }
+		$this->server->getPluginManager()->callEvent($source);
+		if($source->isCancelled()){
+			return;
+		}
 
-        $this->setLastDamageCause($source);
+		$this->setLastDamageCause($source);
 
-        $this->setHealth($this->getHealth() - $source->getFinalDamage());
-    }
+		$this->setHealth($this->getHealth() - $source->getFinalDamage());
+	}
 
 	/**
-	 * @param float                   $amount
+	 * @param float $amount
 	 * @param EntityRegainHealthEvent $source
 	 *
 	 */
 	public function heal($amount, EntityRegainHealthEvent $source){
-        $this->server->getPluginManager()->callEvent($source);
-        if($source->isCancelled()){
-            return;
-        }
+		$this->server->getPluginManager()->callEvent($source);
+		if($source->isCancelled()){
+			return;
+		}
 
-        $this->setHealth($this->getHealth() + $source->getAmount());
-    }
+		$this->setHealth($this->getHealth() + $source->getAmount());
+	}
 
 	/**
 	 * @return int
@@ -654,7 +646,7 @@ abstract class Entity extends Location implements Metadatable{
 		}
 
 		if($amount <= 0){
-            $amount = 0;
+			$amount = 0;
 			if($this->isAlive()){
 				$this->kill();
 			}
@@ -1026,7 +1018,6 @@ abstract class Entity extends Location implements Metadatable{
 	}
 
 	public function onCollideWithPlayer(Human $entityPlayer){
-
 	}
 
 	protected function switchLevel(Level $targetLevel){
@@ -1117,7 +1108,6 @@ abstract class Entity extends Location implements Metadatable{
 		$this->isCollided = $this->onGround;
 		$this->updateFallState($dy, $this->onGround);
 
-
 		Timings::$entityMoveTimer->stopTiming();
 
 		return true;
@@ -1206,7 +1196,6 @@ abstract class Entity extends Location implements Metadatable{
 
 			$this->boundingBox->offset(0, 0, $dz);
 
-
 			if($this->stepHeight > 0 and $fallingFlag and $this->ySize < 0.05 and ($movX != $dx or $movZ != $dz)){
 				$cx = $dx;
 				$cy = $dy;
@@ -1247,7 +1236,6 @@ abstract class Entity extends Location implements Metadatable{
 				}else{
 					$this->ySize += 0.5;
 				}
-
 			}
 
 			$this->x = ($this->boundingBox->minX + $this->boundingBox->maxX) / 2;
@@ -1270,7 +1258,6 @@ abstract class Entity extends Location implements Metadatable{
 			if($movZ != $dz){
 				$this->motionZ = 0;
 			}
-
 
 			//TODO: vehicle collision events (first we need to spawn them!)
 
@@ -1415,8 +1402,8 @@ abstract class Entity extends Location implements Metadatable{
 
 	/**
 	 * @param Vector3|Position|Location $pos
-	 * @param float                     $yaw
-	 * @param float                     $pitch
+	 * @param float $yaw
+	 * @param float $pitch
 	 *
 	 * @return bool
 	 */
@@ -1497,8 +1484,8 @@ abstract class Entity extends Location implements Metadatable{
 	}
 
 	/**
-	 * @param int   $id
-	 * @param int   $type
+	 * @param int $id
+	 * @param int $type
 	 * @param mixed $value
 	 *
 	 * @return bool
@@ -1534,8 +1521,8 @@ abstract class Entity extends Location implements Metadatable{
 	}
 
 	/**
-	 * @param int  $propertyId;
-	 * @param int  $id
+	 * @param int $propertyId ;
+	 * @param int $id
 	 * @param bool $value
 	 */
 	public function setDataFlag($propertyId, $id, $value = true, $type = self::DATA_TYPE_BYTE){

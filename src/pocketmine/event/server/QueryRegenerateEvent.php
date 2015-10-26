@@ -50,7 +50,6 @@ class QueryRegenerateEvent extends ServerEvent{
 
 	private $extraData = [];
 
-
 	public function __construct(Server $server, $timeout = 5){
 		$this->timeout = $timeout;
 		$this->serverName = $server->getServerName();
@@ -72,7 +71,6 @@ class QueryRegenerateEvent extends ServerEvent{
 		$this->whitelist = $server->hasWhitelist() ? "on" : "off";
 		$this->port = $server->getPort();
 		$this->ip = $server->getIp();
-
 	}
 
 	/**

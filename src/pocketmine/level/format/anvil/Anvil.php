@@ -24,19 +24,15 @@ namespace pocketmine\level\format\anvil;
 use pocketmine\level\format\FullChunk;
 use pocketmine\level\format\mcregion\McRegion;
 use pocketmine\level\Level;
-use pocketmine\nbt\NBT;
 use pocketmine\nbt\tag\Byte;
 use pocketmine\nbt\tag\ByteArray;
 use pocketmine\nbt\tag\Compound;
 use pocketmine\network\protocol\FullChunkDataPacket;
-use pocketmine\tile\Spawnable;
-use pocketmine\utils\BinaryStream;
 use pocketmine\utils\ChunkException;
-
 
 class Anvil extends McRegion{
 
-    const REQUEST_CHUNK_GET_CHUNK_MODE = false;
+	const REQUEST_CHUNK_GET_CHUNK_MODE = false;
 
 	/** @var RegionLoader[] */
 	protected $regions = [];
@@ -83,8 +79,8 @@ class Anvil extends McRegion{
 	}
 
 	/**
-	 * @param int  $chunkX
-	 * @param int  $chunkZ
+	 * @param int $chunkX
+	 * @param int $chunkZ
 	 * @param bool $create
 	 *
 	 * @return Chunk
@@ -140,8 +136,7 @@ class Anvil extends McRegion{
 		return true;
 	}
 
-    protected function getFullChunkDataPacketOrder()
-    {
-        return FullChunkDataPacket::ORDER_LAYERED;
-    }
+	protected function getFullChunkDataPacketOrder(){
+		return FullChunkDataPacket::ORDER_LAYERED;
+	}
 }

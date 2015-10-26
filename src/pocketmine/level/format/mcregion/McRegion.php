@@ -32,13 +32,12 @@ use pocketmine\nbt\tag\Long;
 use pocketmine\nbt\tag\String;
 use pocketmine\network\protocol\FullChunkDataPacket;
 use pocketmine\tile\Spawnable;
-
 use pocketmine\utils\BinaryStream;
 use pocketmine\utils\ChunkException;
 
 class McRegion extends BaseLevelProvider{
 
-    const REQUEST_CHUNK_GET_CHUNK_MODE = true;
+	const REQUEST_CHUNK_GET_CHUNK_MODE = true;
 
 	/** @var RegionLoader[] */
 	protected $regions = [];
@@ -245,8 +244,8 @@ class McRegion extends BaseLevelProvider{
 	}
 
 	/**
-	 * @param int  $chunkX
-	 * @param int  $chunkZ
+	 * @param int $chunkX
+	 * @param int $chunkZ
 	 * @param bool $create
 	 *
 	 * @return Chunk
@@ -274,7 +273,6 @@ class McRegion extends BaseLevelProvider{
 
 		$chunk->setX($chunkX);
 		$chunk->setZ($chunkZ);
-
 
 		if(isset($this->chunks[$index = Level::chunkHash($chunkX, $chunkZ)]) and $this->chunks[$index] !== $chunk){
 			$this->unloadChunk($chunkX, $chunkZ, false);
@@ -319,13 +317,11 @@ class McRegion extends BaseLevelProvider{
 		$this->level = null;
 	}
 
-    protected function getChunkForChunkRequest($x, $z)
-    {
-        return $this->getChunk($x, $z, static::REQUEST_CHUNK_GET_CHUNK_MODE);
-    }
+	protected function getChunkForChunkRequest($x, $z){
+		return $this->getChunk($x, $z, static::REQUEST_CHUNK_GET_CHUNK_MODE);
+	}
 
-    protected function getFullChunkDataPacketOrder()
-    {
-        return FullChunkDataPacket::ORDER_COLUMNS;
-    }
+	protected function getFullChunkDataPacketOrder(){
+		return FullChunkDataPacket::ORDER_COLUMNS;
+	}
 }

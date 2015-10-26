@@ -23,6 +23,7 @@
  * Common functions used to decode and encode packets for the Minecraft PE client.
  */
 namespace pocketmine\utils;
+
 use pocketmine\entity\Entity;
 use raklib\Binary as RBinary;
 
@@ -136,7 +137,6 @@ class Binary extends RBinary{
 					break;
 				default:
 					return [];
-
 			}
 			if($types === true){
 				$m[$bottom] = [$r, $type];

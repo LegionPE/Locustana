@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -39,13 +39,11 @@ use pocketmine\nbt\tag\NamedTAG;
 use pocketmine\nbt\tag\Short;
 use pocketmine\nbt\tag\String;
 use pocketmine\nbt\tag\Tag;
-use pocketmine\utils\Utils;
-
-#ifndef COMPILE
 use pocketmine\utils\Binary;
 
-#endif
+#ifndef COMPILE
 
+#endif
 
 #include <rules/NBT.h>
 
@@ -74,10 +72,9 @@ class NBT{
 	public $endianness;
 	private $data;
 
-
 	/**
 	 * @param Item $item
-	 * @param int  $slot
+	 * @param int $slot
 	 * @return Compound
 	 */
 	public static function putItemHelper(Item $item, $slot = null){
@@ -109,7 +106,7 @@ class NBT{
 		}
 
 		$item = Item::get($tag->id->getValue(), !isset($tag->Damage) ? 0 : $tag->Damage->getValue(), $tag->Count->getValue());
-		
+
 		if(isset($tag->tag) and $tag->tag instanceof Compound){
 			$item->setNamedTag($tag->tag);
 		}
@@ -117,45 +114,44 @@ class NBT{
 		return $item;
 	}
 
-    protected static function matchArray(\ArrayAccess $tag1, \ArrayAccess $tag2)
-    {
-        if($tag1->getName() !== $tag2->getName() or $tag1->getCount() !== $tag2->getCount()){
-            return false;
-        }
+	protected static function matchArray(\ArrayAccess $tag1, \ArrayAccess $tag2){
+		if($tag1->getName() !== $tag2->getName() or $tag1->getCount() !== $tag2->getCount()){
+			return false;
+		}
 
-        foreach($tag1 as $k => $v){
-            if(!($v instanceof Tag)){
-                continue;
-            }
+		foreach($tag1 as $k => $v){
+			if(!($v instanceof Tag)){
+				continue;
+			}
 
-            if(!isset($tag2->{$k}) or !($tag2->{$k} instanceof $v)){
-                return false;
-            }
+			if(!isset($tag2->{$k}) or !($tag2->{$k} instanceof $v)){
+				return false;
+			}
 
-            if($v instanceof Compound){
-                if(!self::matchTree($v, $tag2->{$k})){
-                    return false;
-                }
-            }elseif($v instanceof Enum){
-                if(!self::matchList($v, $tag2->{$k})){
-                    return false;
-                }
-            }else{
-                if($v->getValue() !== $tag2->{$k}->getValue()){
-                    return false;
-                }
-            }
-        }
+			if($v instanceof Compound){
+				if(!self::matchTree($v, $tag2->{$k})){
+					return false;
+				}
+			}elseif($v instanceof Enum){
+				if(!self::matchList($v, $tag2->{$k})){
+					return false;
+				}
+			}else{
+				if($v->getValue() !== $tag2->{$k}->getValue()){
+					return false;
+				}
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 
 	public static function matchList(Enum $tag1, Enum $tag2){
 		return self::matchArray($tag1, $tag2);
 	}
 
 	public static function matchTree(Compound $tag1, Compound $tag2){
-        return self::matchArray($tag1, $tag2);
+		return self::matchArray($tag1, $tag2);
 	}
 
 	public static function parseJSON($data, &$offset = 0){
@@ -177,7 +173,6 @@ class NBT{
 	private static function parseList($str, &$offset = 0){
 		$len = strlen($str);
 
-
 		$key = 0;
 		$value = null;
 
@@ -193,7 +188,7 @@ class NBT{
 
 			$value = self::readValue($str, $offset, $type);
 
-            self::bindValueWithType($key, $value, $data, $type);
+			self::bindValueWithType($key, $value, $data, $type);
 
 			$key++;
 		}
@@ -223,44 +218,43 @@ class NBT{
 		return $data;
 	}
 
-    public static function bindValueWithType($key, $value, &$data, $type)
-    {
-        switch($type){
-            case NBT::TAG_Byte:
-                $data[$key] = new Byte($key, $value);
-                break;
-            case NBT::TAG_Short:
-                $data[$key] = new Short($key, $value);
-                break;
-            case NBT::TAG_Int:
-                $data[$key] = new Int($key, $value);
-                break;
-            case NBT::TAG_Long:
-                $data[$key] = new Long($key, $value);
-                break;
-            case NBT::TAG_Float:
-                $data[$key] = new Float($key, $value);
-                break;
-            case NBT::TAG_Double:
-                $data[$key] = new Double($key, $value);
-                break;
-            case NBT::TAG_ByteArray:
-                $data[$key] = new ByteArray($key, $value);
-                break;
-            case NBT::TAG_String:
-                $data[$key] = new String($key, $value);
-                break;
-            case NBT::TAG_Enum:
-                $data[$key] = new Enum($key, $value);
-                break;
-            case NBT::TAG_Compound:
-                $data[$key] = new Compound($key, $value);
-                break;
-            case NBT::TAG_IntArray:
-                $data[$key] = new IntArray($key, $value);
-                break;
-        }
-    }
+	public static function bindValueWithType($key, $value, &$data, $type){
+		switch($type){
+			case NBT::TAG_Byte:
+				$data[$key] = new Byte($key, $value);
+				break;
+			case NBT::TAG_Short:
+				$data[$key] = new Short($key, $value);
+				break;
+			case NBT::TAG_Int:
+				$data[$key] = new Int($key, $value);
+				break;
+			case NBT::TAG_Long:
+				$data[$key] = new Long($key, $value);
+				break;
+			case NBT::TAG_Float:
+				$data[$key] = new Float($key, $value);
+				break;
+			case NBT::TAG_Double:
+				$data[$key] = new Double($key, $value);
+				break;
+			case NBT::TAG_ByteArray:
+				$data[$key] = new ByteArray($key, $value);
+				break;
+			case NBT::TAG_String:
+				$data[$key] = new String($key, $value);
+				break;
+			case NBT::TAG_Enum:
+				$data[$key] = new Enum($key, $value);
+				break;
+			case NBT::TAG_Compound:
+				$data[$key] = new Compound($key, $value);
+				break;
+			case NBT::TAG_IntArray:
+				$data[$key] = new IntArray($key, $value);
+				break;
+		}
+	}
 
 	private static function readValue($data, &$offset, &$type = null){
 		$value = "";

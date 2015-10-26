@@ -1,18 +1,9 @@
-# Katana (刀)
-Katana is a fork of [PocketMine-MP](http://github.com/PocketMine/PocketMine-MP) designed for large-scale server networks. It focuses on providing the best possible performance through simplicity and only features essential to running a network.
+# Locustana
+Locustana is a fork of [Katana by Hydreon](https://github.com/Hydreon/Katana). Katana is a fork of [PocketMine](https://github.com/PocketMine/PocketMine-MP). For the changes from PocketMine to Katana, please check the [Katana page](https://github.com/Hydreon/Katana).
 
-### Features
-- **Powerful chunk caching and processing system.**
-    - Chunks are only encoded to be sent to the client once, freeing up many compute cycles
-    - The results of chunk encoding are stored to and loaded from a disk cache or RAM
-    - Lightweight process for sending chunks is easy to modify to fit your server's needs
-- **Revamped console.**
-    - Verbosity only when necessary
-    - Colored and formatted console messages greatly improve readability
-- **Production ready.**
-    - Ability to disable all logging on player game servers reduces disk I/O
-    - Future: Implement auto-updating system to make managing large deployments easy
-    - Katana can redirect players when no slots are available or the server is lagging
+### Changes from Katana
+* Removed all useless console messages
+* Removed installer wizard
 
 ### Warnings & Intentional Incompatibility
 - Using Katana on Windows is not supported.

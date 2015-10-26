@@ -2,11 +2,11 @@
 
 /*
  *
- *  ____            _        _   __  __ _                  __  __ ____  
- * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \ 
+ *  ____            _        _   __  __ _                  __  __ ____
+ * |  _ \ ___   ___| | _____| |_|  \/  (_)_ __   ___      |  \/  |  _ \
  * | |_) / _ \ / __| |/ / _ \ __| |\/| | | '_ \ / _ \_____| |\/| | |_) |
- * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/ 
- * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_| 
+ * |  __/ (_) | (__|   <  __/ |_| |  | | | | | |  __/_____| |  | |  __/
+ * |_|   \___/ \___|_|\_\___|\__|_|  |_|_|_| |_|\___|     |_|  |_|_|
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -15,7 +15,7 @@
  *
  * @author PocketMine Team
  * @link http://www.pocketmine.net/
- * 
+ *
  *
 */
 
@@ -23,6 +23,7 @@
  * Common Utilities used around the code
  */
 namespace pocketmine\utils;
+
 use pocketmine\ThreadManager;
 
 /**
@@ -182,7 +183,6 @@ class Utils{
 		}
 
 		return Utils::$ip;
-
 	}
 
 	/**
@@ -220,10 +220,9 @@ class Utils{
 				self::$os = "other";
 			}
 		}
-		
+
 		return self::$os;
 	}
-
 
 	public static function getRealMemoryUsage(){
 		$stack = 0;
@@ -343,7 +342,6 @@ class Utils{
 		return $output;
 	}
 
-
 	/**
 	 * Returns a string that can be printed, replaces non-printable characters
 	 *
@@ -363,12 +361,12 @@ class Utils{
 	 * This function tries to get all the entropy available in PHP, and distills it to get a good RNG.
 	 *
 	 *
-	 * @param int    $length       default 16, Number of bytes to generate
-	 * @param bool   $secure       default true, Generate secure distilled bytes, slower
-	 * @param bool   $raw          default true, returns a binary string if true, or an hexadecimal one
+	 * @param int $length default 16, Number of bytes to generate
+	 * @param bool $secure default true, Generate secure distilled bytes, slower
+	 * @param bool $raw default true, returns a binary string if true, or an hexadecimal one
 	 * @param string $startEntropy default null, adds more initial entropy
-	 * @param int    &$rounds      Will be set to the number of rounds taken
-	 * @param int    &$drop        Will be set to the amount of dropped bytes
+	 * @param int &$rounds Will be set to the number of rounds taken
+	 * @param int &$drop Will be set to the amount of dropped bytes
 	 *
 	 * @return string
 	 */
@@ -523,7 +521,7 @@ class Utils{
 	 *
 	 * @param              $page
 	 * @param array|string $args
-	 * @param int          $timeout
+	 * @param int $timeout
 	 * @param array $extraHeaders
 	 *
 	 * @return bool|mixed

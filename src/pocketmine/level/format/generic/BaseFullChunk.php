@@ -34,7 +34,6 @@ use pocketmine\Player;
 use pocketmine\tile\Tile;
 use pocketmine\utils\BinaryStream;
 
-
 abstract class BaseFullChunk implements FullChunk{
 
 	/** @var Entity[] */
@@ -77,16 +76,16 @@ abstract class BaseFullChunk implements FullChunk{
 
 	/**
 	 * @param LevelProvider $provider
-	 * @param int           $x
-	 * @param int           $z
-	 * @param string        $blocks
-	 * @param string        $data
-	 * @param string        $skyLight
-	 * @param string        $blockLight
-	 * @param int[]         $biomeColors
-	 * @param int[]         $heightMap
-	 * @param Compound[]    $entities
-	 * @param Compound[]    $tiles
+	 * @param int $x
+	 * @param int $z
+	 * @param string $blocks
+	 * @param string $data
+	 * @param string $skyLight
+	 * @param string $blockLight
+	 * @param int[] $biomeColors
+	 * @param int[] $heightMap
+	 * @param Compound[] $entities
+	 * @param Compound[] $tiles
 	 */
 	protected function __construct($provider, $x, $z, $blocks, $data, $skyLight, $blockLight, array $biomeColors = [], array $heightMap = [], array $entities = [], array $tiles = [], array $extraData = []){
 		$this->provider = $provider;
@@ -283,7 +282,6 @@ abstract class BaseFullChunk implements FullChunk{
 
 	/** @deprecated */
 	public function setBiomeColor($x, $z, $R, $G, $B){
-
 	}
 
 	public function getHighestBlockAt($x, $z, $cache = true){
@@ -441,56 +439,53 @@ abstract class BaseFullChunk implements FullChunk{
 		return $this->toBinary();
 	}
 
-    /**
-     * @param Compound $nbt
-     * @return NBT
-     */
-    protected function prepareChunkBinaryWriter(Compound $nbt)
-    {
-        $entities = [];
+	/**
+	 * @param Compound $nbt
+	 * @return NBT
+	 */
+	protected function prepareChunkBinaryWriter(Compound $nbt){
+		$entities = [];
 
-        foreach($this->getEntities() as $entity){
-            if(!($entity instanceof Player) and !$entity->closed){
-                $entity->saveNBT();
-                $entities[] = $entity->namedtag;
-            }
-        }
+		foreach($this->getEntities() as $entity){
+			if(!($entity instanceof Player) and !$entity->closed){
+				$entity->saveNBT();
+				$entities[] = $entity->namedtag;
+			}
+		}
 
-        $nbt->Entities = new Enum("Entities", $entities);
-        $nbt->Entities->setTagType(NBT::TAG_Compound);
+		$nbt->Entities = new Enum("Entities", $entities);
+		$nbt->Entities->setTagType(NBT::TAG_Compound);
 
+		$tiles = [];
+		foreach($this->getTiles() as $tile){
+			$tile->saveNBT();
+			$tiles[] = $tile->namedtag;
+		}
 
-        $tiles = [];
-        foreach($this->getTiles() as $tile){
-            $tile->saveNBT();
-            $tiles[] = $tile->namedtag;
-        }
+		$nbt->TileEntities = new Enum("TileEntities", $tiles);
+		$nbt->TileEntities->setTagType(NBT::TAG_Compound);
 
-        $nbt->TileEntities = new Enum("TileEntities", $tiles);
-        $nbt->TileEntities->setTagType(NBT::TAG_Compound);
+		$extraData = new BinaryStream();
+		$extraData->putInt(count($this->getBlockExtraDataArray()));
+		foreach($this->getBlockExtraDataArray() as $key => $value){
+			$extraData->putInt($key);
+			$extraData->putShort($value);
+		}
 
-        $extraData = new BinaryStream();
-        $extraData->putInt(count($this->getBlockExtraDataArray()));
-        foreach($this->getBlockExtraDataArray() as $key => $value){
-            $extraData->putInt($key);
-            $extraData->putShort($value);
-        }
+		$nbt->ExtraData = new ByteArray("ExtraData", $extraData->getBuffer());
 
-        $nbt->ExtraData = new ByteArray("ExtraData", $extraData->getBuffer());
+		$writer = new NBT(NBT::BIG_ENDIAN);
+		$nbt->setName("Level");
+		$writer->setData(new Compound("", ["Level" => $nbt]));
 
-        $writer = new NBT(NBT::BIG_ENDIAN);
-        $nbt->setName("Level");
-        $writer->setData(new Compound("", ["Level" => $nbt]));
-
-        return $writer;
-    }
+		return $writer;
+	}
 
 	public function isLightPopulated(){
 		return true;
 	}
 
 	public function setLightPopulated($value = 1){
-
 	}
 
 }

@@ -23,7 +23,6 @@
 
 namespace pocketmine;
 
-
 use pocketmine\metadata\MetadataValue;
 use pocketmine\nbt\tag\Compound;
 use pocketmine\plugin\Plugin;
@@ -136,6 +135,5 @@ class OfflinePlayer implements IPlayer{
 	public function removeMetadata($metadataKey, Plugin $plugin){
 		$this->server->getPlayerMetadata()->removeMetadata($this, $metadataKey, $plugin);
 	}
-
 
 }
