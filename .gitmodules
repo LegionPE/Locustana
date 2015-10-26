@@ -1,10 +1,10 @@
 [submodule "src/raklib"]
 	path = src/raklib
-	url = https://github.com/PocketMine/RakLib.git
+	url = https://github.com/LegionPE/Locustana-RakLib.git
 	branch = master
 [submodule "src/spl"]
 	path = src/spl
-	url = https://github.com/PocketMine/PocketMine-SPL.git
+	url = https://github.com/LegionPE/Locustana-SPL.git
 [submodule "tests/TesterPlugin"]
 	path = tests/TesterPlugin
 	url = https://github.com/PocketMine/TesterPlugin.git
