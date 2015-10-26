@@ -1,5 +1,6 @@
 /players/
 /worlds/
+/chunk_cache/
 /plugins/
 /bin/
 /timings/
@@ -8,6 +9,7 @@
 *.phar
 server.properties
 pocketmine.yml
+katana.yml
 
 # Common IDEs
 .idea/*

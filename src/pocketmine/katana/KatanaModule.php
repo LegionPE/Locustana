@@ -13,8 +13,6 @@
 
 namespace pocketmine\katana;
 
-use pocketmine\utils\Terminal;
-
 /*
  * Abstraction layer for modules that implement Katana's modified functionality relative to PocketMine
  */
@@ -47,6 +45,5 @@ class KatanaModule{
 	}
 
 	public function writeLoaded(){
-		$this->getKatana()->console->katana("Loaded " . Terminal::$COLOR_AQUA . $this->name . Terminal::$COLOR_GRAY . " module");
 	}
 }

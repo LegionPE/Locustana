@@ -809,6 +809,7 @@ class Server{
 	 * @param string $name
 	 * @param Compound $nbtTag
 	 * @param bool $async
+	 * @return bool
 	 */
 	public function saveOfflinePlayerData($name, Compound $nbtTag, $async = false){
 		if(!$this->katana->getProperty("console.save-player-data", false)){
@@ -1514,9 +1515,6 @@ class Server{
 		define("BOOTUP_RANDOM", @Utils::getRandomBytes(16));
 		$this->serverID = Utils::getMachineUniqueId($this->getIp() . $this->getPort());
 
-		$this->katana->console->system("Server unique id: " . $this->getServerUniqueId());
-		$this->katana->console->system("Machine unique id: " . Utils::getMachineUniqueId());
-
 		$this->network = new Network($this);
 		$this->network->setName($this->getMotd());
 
@@ -1561,13 +1559,7 @@ class Server{
 		foreach((array) $this->getProperty("worlds", []) as $name => $worldSetting){
 			if($this->loadLevel($name) === false){
 				$seed = $this->getProperty("worlds.$name.seed", time());
-				if(count($options) > 0){
-					$options = [
-						"preset" => implode(":", $options),
-					];
-				}else{
-					$options = [];
-				}
+				$options = [];
 
 				$this->generateLevel($name, $seed, $options);
 			}
@@ -1915,28 +1907,22 @@ class Server{
 				UPnP::RemovePortForward($this->getPort());
 			}
 
-			$this->katana->console->system(Terminal::$COLOR_GRAY . "Disabling all plugins");
 			$this->pluginManager->disablePlugins();
 
 			foreach($this->players as $player){
 				$player->close($player->getLeaveMessage(), $this->getProperty("settings.shutdown-message", "Server closed"));
 			}
 
-			$this->katana->console->system(Terminal::$COLOR_GRAY . "Unloading all levels");
 			foreach($this->getLevels() as $level){
 				$this->unloadLevel($level, true);
 			}
 
-			$this->katana->console->system("Removing event handlers");
 			HandlerList::unregisterAll();
 
-			$this->katana->console->system("Saving properties");
 			$this->properties->save();
 
-			$this->katana->console->system("Closing console");
 			$this->console->kill();
 
-			$this->katana->console->system("Stopping network interfaces");
 			foreach($this->network->getInterfaces() as $interface){
 				$interface->shutdown();
 				$this->network->unregisterInterface($interface);

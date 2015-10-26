@@ -101,8 +101,8 @@ namespace pocketmine {
 	}
 
 	if(!class_exists("ClassLoader", false)){
-		require_once(\pocketmine\PATH . "src/spl/ThreadedFactory.php");
 		require_once(\pocketmine\PATH . "src/spl/ClassLoader.php");
+		require_once(\pocketmine\PATH . "src/spl/ThreadedFactory.php");
 		require_once(\pocketmine\PATH . "src/spl/BaseClassLoader.php");
 		require_once(\pocketmine\PATH . "src/pocketmine/CompatibleClassLoader.php");
 	}
@@ -148,11 +148,6 @@ namespace pocketmine {
 	$tmpKatanaProperties = new Config("katana.yml", Config::YAML, []);
 	$saveLog = $tmpKatanaProperties->getNested("console.save-console", true);
 	$logger = new MainLogger(\pocketmine\DATA . "server.log", \pocketmine\ANSI, $saveLog);
-	if($saveLog){
-		$logger->info("Writing logs to server.log");
-	}else{
-		$logger->info("Server logging disabled");
-	}
 
 	if(!ini_get("date.timezone")){
 		if(($timezone = detect_system_timezone()) and date_default_timezone_set($timezone)){
@@ -467,17 +462,10 @@ namespace pocketmine {
 	@define("INT32_MASK", is_int(0xffffffff) ? 0xffffffff : -1);
 	@ini_set("opcache.mmap_base", bin2hex(Utils::getRandomBytes(8, false))); //Fix OPCache address errors
 
-	if(\Phar::running(true) === ""){
-		$logger->warning("Non-packaged Katana installation detected, do not use on production.");
-	}
-
 	ThreadManager::init();
 	$server = new Server($autoloader, $logger, \pocketmine\PATH, \pocketmine\DATA, \pocketmine\PLUGIN_PATH);
 
-	$server->getKatana()->console->system("Stopping other threads");
-
 	foreach(ThreadManager::getInstance()->getAll() as $id => $thread){
-		$server->getKatana()->console->system("Stopping " . Terminal::$COLOR_WHITE . (new \ReflectionClass($thread))->getShortName() . Terminal::$COLOR_GRAY . " thread");
 		$thread->quit();
 	}
 
