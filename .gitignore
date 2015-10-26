@@ -1,8 +1,8 @@
-players/*
-worlds/*
-plugins/*
-bin/*
-timings/*
+/players/
+/worlds/
+/plugins/
+/bin/
+/timings/
 *.log
 *.txt
 *.phar
