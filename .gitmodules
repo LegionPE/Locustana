@@ -5,9 +5,3 @@
 [submodule "src/spl"]
 	path = src/spl
 	url = https://github.com/LegionPE/Locustana-SPL.git
-[submodule "tests/TesterPlugin"]
-	path = tests/TesterPlugin
-	url = https://github.com/PocketMine/TesterPlugin.git
-[submodule "src/pocketmine/lang/locale"]
-	path = src/pocketmine/lang/locale
-	url = https://github.com/PocketMine/PocketMine-Language.git
