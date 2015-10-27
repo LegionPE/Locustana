@@ -34,7 +34,6 @@ use raklib\RakLib;
  */
 
 class CrashDump{
-
 	/** @var Server */
 	private $server;
 	private $fp;
