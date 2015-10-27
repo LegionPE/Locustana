@@ -38,6 +38,6 @@ class Console extends KatanaModule{
 	}
 
 	public function katana($text, $level = "info"){
-		parent::getServer()->getLogger()->{$level}(Terminal::$COLOR_GOLD . "katana> " . Terminal::$COLOR_GRAY . $text);
+		parent::getServer()->getLogger()->{$level}(Terminal::$COLOR_GOLD . "locustana> " . Terminal::$COLOR_GRAY . $text);
 	}
 }

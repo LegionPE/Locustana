@@ -279,7 +279,7 @@ class Server{
 	 * @return string
 	 */
 	public function getName(){
-		return "Katana";
+		return "Locustana";
 	}
 
 	/**
