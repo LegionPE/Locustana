@@ -1573,14 +1573,14 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 				}
 			}
 
-			if($this->starvationTick >= 20){
-				$ev = new EntityDamageEvent($this, EntityDamageEvent::CAUSE_CUSTOM, 1);
-				$this->attack(1, $ev);
+//			if($this->starvationTick >= 20){
+//				$ev = new EntityDamageEvent($this, EntityDamageEvent::CAUSE_CUSTOM, 1);
+//				$this->attack(1, $ev);
 				$this->starvationTick = 0;
-			}
-			if($this->getFood() <= 0){
-				$this->starvationTick++;
-			}
+//			}
+//			if($this->getFood() <= 0){
+//				$this->starvationTick++;
+//			}
 
 			if($this->isMoving() && $this->isSurvival()){
 				if($this->isSprinting()){
@@ -2308,27 +2308,27 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 									}
 								}
 							}
-						}elseif($this->inventory->getItemInHand()->getId() === Item::BUCKET and $this->inventory->getItemInHand()->getDamage() === 1){ //Milk!
-							$this->server->getPluginManager()->callEvent($ev = new PlayerItemConsumeEvent($this, $this->inventory->getItemInHand()));
-							if($ev->isCancelled()){
-								$this->inventory->sendContents($this);
-								break;
-							}
+//						}elseif($this->inventory->getItemInHand()->getId() === Item::BUCKET and $this->inventory->getItemInHand()->getDamage() === 1){ //Milk!
+//							$this->server->getPluginManager()->callEvent($ev = new PlayerItemConsumeEvent($this, $this->inventory->getItemInHand()));
+//							if($ev->isCancelled()){
+//								$this->inventory->sendContents($this);
+//								break;
+//							}
 
-							$pk = new EntityEventPacket();
-							$pk->eid = $this->getId();
-							$pk->event = EntityEventPacket::USE_ITEM;
-							$this->dataPacket($pk);
-							Server::broadcastPacket($this->getViewers(), $pk);
-
-							if($this->isSurvival()){
-								$slot = $this->inventory->getItemInHand();
-								--$slot->count;
-								$this->inventory->setItemInHand($slot);
-								$this->inventory->addItem(Item::get(Item::BUCKET, 0, 1));
-							}
-
-							$this->removeAllEffects();
+//							$pk = new EntityEventPacket();
+//							$pk->eid = $this->getId();
+//							$pk->event = EntityEventPacket::USE_ITEM;
+//							$this->dataPacket($pk);
+//							Server::broadcastPacket($this->getViewers(), $pk);
+//
+//							if($this->isSurvival()){
+//								$slot = $this->inventory->getItemInHand();
+//								--$slot->count;
+//								$this->inventory->setItemInHand($slot);
+//								$this->inventory->addItem(Item::get(Item::BUCKET, 0, 1));
+//							}
+//
+//							$this->removeAllEffects();
 						}else{
 							$this->inventory->sendContents($this);
 						}
@@ -3395,11 +3395,11 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 			$this->removeEffect(Effect::SLOWNESS);
 		}elseif($this->getFood() - $amount < 6 && !($this->getFood() > 6)){
 			$this->setDataProperty(self::DATA_FLAG_SPRINTING, self::DATA_TYPE_BYTE, true);
-			$effect = Effect::getEffect(Effect::SLOWNESS);
-			$effect->setDuration(0x7fffffff);
-			$effect->setAmplifier(2);
-			$effect->setVisible(false);
-			$this->addEffect($effect);
+//			$effect = Effect::getEffect(Effect::SLOWNESS);
+//			$effect->setDuration(0x7fffffff);
+//			$effect->setAmplifier(2);
+//			$effect->setVisible(false);
+//			$this->addEffect($effect);
 		}
 		if($this->food - $amount < 0){
 			return;

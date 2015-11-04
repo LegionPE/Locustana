@@ -11,6 +11,8 @@ server.properties
 pocketmine.yml
 katana.yml
 
+compile.php
+
 # Common IDEs
 .idea/*
 nbproject/*
