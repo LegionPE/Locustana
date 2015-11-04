@@ -40,7 +40,6 @@ use pocketmine\event\block\SignChangeEvent;
 use pocketmine\event\entity\EntityDamageByBlockEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
-use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\entity\EntityShootBowEvent;
 use pocketmine\event\entity\ProjectileLaunchEvent;
 use pocketmine\event\inventory\CraftItemEvent;
@@ -135,6 +134,8 @@ use pocketmine\tile\Spawnable;
 use pocketmine\tile\Tile;
 use pocketmine\utils\Terminal;
 use pocketmine\utils\TextFormat;
+
+//use pocketmine\event\entity\EntityRegainHealthEvent;
 
 /**
  * Handles incoming packets within the context of a particular player, and abstracts away the creation
@@ -1596,16 +1597,16 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 			}
 
 			if($this->foodTick >= 80){
-				if($this->getHealth() < $this->getMaxHealth() && $this->getFood() >= 18){
-					$ev = new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_EATING);
-					$this->heal(1, $ev);
-					if($this->foodDepletion >= 2){
-						$this->subtractFood(1);
-						$this->foodDepletion = 0;
-					}else{
-						$this->foodDepletion++;
-					}
-				}
+//				if($this->getHealth() < $this->getMaxHealth() && $this->getFood() >= 18){
+//					$ev = new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_EATING);
+//					$this->heal(1, $ev);
+//					if($this->foodDepletion >= 2){
+//						$this->subtractFood(1);
+//						$this->foodDepletion = 0;
+//					}else{
+//						$this->foodDepletion++;
+//					}
+//				}
 				$this->foodTick = 0;
 			}
 			if($this->getHealth() < $this->getMaxHealth()){
@@ -1671,12 +1672,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 				$pk->event = EntityEventPacket::USE_ITEM;
 				$this->dataPacket($pk);
 				Server::broadcastPacket($this->getViewers(), $pk);
-
-				$amount = $items[$slot->getId()];
-				if(is_array($amount)){
-					$amount = isset($amount[$slot->getDamage()]) ? $amount[$slot->getDamage()] : 0;
-				}
-				$this->setFood($this->getFood() + $amount);
 
 				--$slot->count;
 				$this->inventory->setItemInHand($slot);
