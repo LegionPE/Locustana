@@ -45,14 +45,14 @@ class Effect{
 	const WATER_BREATHING = 13;
 	const INVISIBILITY = 14;
 	//const BLINDNESS = 15;
-	//const NIGHT_VISION = 16;
-	//const HUNGER = 17;
+	const NIGHT_VISION = 16;
+	const HUNGER = 17;
 	const WEAKNESS = 18;
 	const POISON = 19;
 	const WITHER = 20;
 	const HEALTH_BOOST = 21;
-	//const ABSORPTION = 22;
-	//const SATURATION = 23;
+//	const ABSORPTION = 22;
+//	const SATURATION = 23;
 
 	/** @var Effect[] */
 	protected static $effects;
@@ -74,6 +74,7 @@ class Effect{
 		self::$effects[Effect::FIRE_RESISTANCE] = new Effect(Effect::FIRE_RESISTANCE, "%potion.fireResistance", 228, 154, 58);
 		self::$effects[Effect::WATER_BREATHING] = new Effect(Effect::WATER_BREATHING, "%potion.waterBreathing", 46, 82, 153);
 		self::$effects[Effect::INVISIBILITY] = new Effect(Effect::INVISIBILITY, "%potion.invisibility", 127, 131, 146);
+		self::$effects[Effect::NIGHT_VISION] = new Effect(Effect::NIGHT_VISION, "%potion.nightVision", 127, 131, 146);
 		//Hunger
 		self::$effects[Effect::WEAKNESS] = new Effect(Effect::WEAKNESS, "%potion.weakness", 72, 77, 72, true);
 		self::$effects[Effect::POISON] = new Effect(Effect::POISON, "%potion.poison", 78, 147, 49, true);
