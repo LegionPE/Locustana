@@ -107,13 +107,17 @@ use pocketmine\network\protocol\AnimatePacket;
 use pocketmine\network\protocol\BatchPacket;
 use pocketmine\network\protocol\ContainerClosePacket;
 use pocketmine\network\protocol\ContainerSetContentPacket;
+use pocketmine\network\protocol\ContainerSetSlotPacket;
 use pocketmine\network\protocol\DataPacket;
 use pocketmine\network\protocol\DisconnectPacket;
 use pocketmine\network\protocol\EntityEventPacket;
 use pocketmine\network\protocol\FullChunkDataPacket;
 use pocketmine\network\protocol\Info as ProtocolInfo;
+use pocketmine\network\protocol\mcpe013\ContainerSetSlotPacket13;
+use pocketmine\network\protocol\mcpe013\PlayerListPacket13;
 use pocketmine\network\protocol\MovePlayerPacket;
 use pocketmine\network\protocol\PlayerActionPacket;
+use pocketmine\network\protocol\PlayerListPacket;
 use pocketmine\network\protocol\PlayStatusPacket;
 use pocketmine\network\protocol\RespawnPacket;
 use pocketmine\network\protocol\SetDifficultyPacket;
@@ -212,6 +216,8 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	protected $sleeping = null;
 	protected $clientID = null;
 
+	protected $is013 = false;
+
 	private $loaderId = null;
 
 	protected $stepHeight = 0.6;
@@ -259,13 +265,14 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 
 	public function getLeaveMessage(){
 		return new TranslationContainer(TextFormat::YELLOW . "%multiplayer.player.left", [
-			$this->getDisplayName()
+			$this->getDisplayName(),
 		]);
 	}
 
 	/**
 	 * This might disappear in the future.
-	 * Please use getUniqueId() instead (IP + clientId + name combo, in the future it'll change to real UUID for online auth)
+	 * Please use getUniqueId() instead (IP + clientId + name combo, in the future it'll change to real UUID for online
+	 * auth)
 	 *
 	 * @deprecated
 	 *
@@ -464,7 +471,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	/**
 	 * @param Plugin $plugin
 	 * @param string $name
-	 * @param bool $value
+	 * @param bool   $value
 	 *
 	 * @return permission\PermissionAttachment
 	 */
@@ -506,9 +513,9 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 
 	/**
 	 * @param SourceInterface $interface
-	 * @param null $clientID
-	 * @param string $ip
-	 * @param integer $port
+	 * @param null            $clientID
+	 * @param string          $ip
+	 * @param integer         $port
 	 */
 	public function __construct(SourceInterface $interface, $clientID, $ip, $port){
 		$this->interface = $interface;
@@ -784,7 +791,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 
 		$this->server->getPluginManager()->callEvent($ev = new PlayerJoinEvent($this,
 			new TranslationContainer(TextFormat::YELLOW . "%multiplayer.player.joined", [
-				$this->getDisplayName()
+				$this->getDisplayName(),
 			])
 		));
 		if(strlen(trim($ev->getJoinMessage())) > 0){
@@ -924,11 +931,24 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	 * Sends an ordered DataPacket to the send buffer
 	 *
 	 * @param DataPacket $packet
-	 * @param bool $needACK
+	 * @param bool       $needACK
 	 *
 	 * @return int|bool
 	 */
 	public function dataPacket(DataPacket $packet, $needACK = false){
+		if($packet instanceof ContainerSetSlotPacket){
+			$pk = new ContainerSetSlotPacket13;
+			$pk->windowid = $packet->windowid;
+			$pk->slot = $packet->slot;
+			$pk->item = $packet->item;
+			$packet = $pk;
+		}elseif($packet instanceof PlayerListPacket){
+			$pk = new PlayerListPacket13;
+			$pk->entries = $packet->entries;
+			$pk->type = $packet->type;
+			$packet = $pk;
+		}
+
 		if(!$this->connected){
 			return false;
 		}
@@ -957,7 +977,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 
 	/**
 	 * @param DataPacket $packet
-	 * @param bool $needACK
+	 * @param bool       $needACK
 	 *
 	 * @return bool|int
 	 */
@@ -1024,7 +1044,8 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	}
 
 	/**
-	 * Sets the spawnpoint of the player (and the compass direction) to a Vector3, or set it on another world with a Position object
+	 * Sets the spawnpoint of the player (and the compass direction) to a Vector3, or set it on another world with a
+	 * Position object
 	 *
 	 * @param Vector3|Position $pos
 	 */
@@ -1577,7 +1598,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 //			if($this->starvationTick >= 20){
 //				$ev = new EntityDamageEvent($this, EntityDamageEvent::CAUSE_CUSTOM, 1);
 //				$this->attack(1, $ev);
-				$this->starvationTick = 0;
+			$this->starvationTick = 0;
 //			}
 //			if($this->getFood() <= 0){
 //				$this->starvationTick++;
@@ -1648,13 +1669,13 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 			Item::COOKIE => 2,
 			Item::COOKED_FISH => [
 				0 => 5,
-				1 => 6
+				1 => 6,
 			],
 			Item::RAW_FISH => [
 				0 => 2,
 				1 => 2,
 				2 => 1,
-				3 => 1
+				3 => 1,
 			],
 		];
 
@@ -1947,23 +1968,27 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 					break;
 				}
 
-				if($packet->protocol1 !== ProtocolInfo::CURRENT_PROTOCOL){
-					if($packet->protocol1 < ProtocolInfo::CURRENT_PROTOCOL){
-						$message = "disconnectionScreen.outdatedClient";
+				if($packet->protocol1 === 38){
+					$this->is013 = true;
+				}else{
+					if($packet->protocol1 !== ProtocolInfo::CURRENT_PROTOCOL){
+						if($packet->protocol1 < ProtocolInfo::CURRENT_PROTOCOL){
+							$message = "disconnectionScreen.outdatedClient";
 
-						$pk = new PlayStatusPacket();
-						$pk->status = PlayStatusPacket::LOGIN_FAILED_CLIENT;
-						$this->directDataPacket($pk);
-					}else{
-						$message = "disconnectionScreen.outdatedServer";
+							$pk = new PlayStatusPacket();
+							$pk->status = PlayStatusPacket::LOGIN_FAILED_CLIENT;
+							$this->directDataPacket($pk);
+						}else{
+							$message = "disconnectionScreen.outdatedServer";
 
-						$pk = new PlayStatusPacket();
-						$pk->status = PlayStatusPacket::LOGIN_FAILED_SERVER;
-						$this->directDataPacket($pk);
+							$pk = new PlayStatusPacket();
+							$pk->status = PlayStatusPacket::LOGIN_FAILED_SERVER;
+							$this->directDataPacket($pk);
+						}
+						$this->close("", $message, false);
+
+						break;
 					}
-					$this->close("", $message, false);
-
-					break;
 				}
 
 				$this->randomClientId = $packet->clientId;
@@ -2176,16 +2201,16 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 							"Pos" => new Enum("Pos", [
 								new Double("", $this->x),
 								new Double("", $this->y + $this->getEyeHeight()),
-								new Double("", $this->z)
+								new Double("", $this->z),
 							]),
 							"Motion" => new Enum("Motion", [
 								new Double("", $aimPos->x),
 								new Double("", $aimPos->y),
-								new Double("", $aimPos->z)
+								new Double("", $aimPos->z),
 							]),
 							"Rotation" => new Enum("Rotation", [
 								new Float("", $this->yaw),
-								new Float("", $this->pitch)
+								new Float("", $this->pitch),
 							]),
 						]);
 
@@ -2251,18 +2276,18 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 									"Pos" => new Enum("Pos", [
 										new Double("", $this->x),
 										new Double("", $this->y + $this->getEyeHeight()),
-										new Double("", $this->z)
+										new Double("", $this->z),
 									]),
 									"Motion" => new Enum("Motion", [
 										new Double("", -sin($this->yaw / 180 * M_PI) * cos($this->pitch / 180 * M_PI)),
 										new Double("", -sin($this->pitch / 180 * M_PI)),
-										new Double("", cos($this->yaw / 180 * M_PI) * cos($this->pitch / 180 * M_PI))
+										new Double("", cos($this->yaw / 180 * M_PI) * cos($this->pitch / 180 * M_PI)),
 									]),
 									"Rotation" => new Enum("Rotation", [
 										new Float("", $this->yaw),
-										new Float("", $this->pitch)
+										new Float("", $this->pitch),
 									]),
-									"Fire" => new Short("Fire", $this->isOnFire() ? 45 * 60 : 0)
+									"Fire" => new Short("Fire", $this->isOnFire() ? 45 * 60 : 0),
 								]);
 
 								$diff = ($this->server->getTick() - $this->startAction);
@@ -2957,7 +2982,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 						$t->spawnTo($this);
 					}else{
 						$ev = new SignChangeEvent($t->getBlock(), $this, [
-							TextFormat::clean($nbt["Text1"], $this->removeFormat), TextFormat::clean($nbt["Text2"], $this->removeFormat), TextFormat::clean($nbt["Text3"], $this->removeFormat), TextFormat::clean($nbt["Text4"], $this->removeFormat)
+							TextFormat::clean($nbt["Text1"], $this->removeFormat), TextFormat::clean($nbt["Text2"], $this->removeFormat), TextFormat::clean($nbt["Text3"], $this->removeFormat), TextFormat::clean($nbt["Text4"], $this->removeFormat),
 						]);
 
 						if(!isset($t->namedtag->Creator) or $t->namedtag["Creator"] !== $this->getRawUniqueId()){
@@ -2991,7 +3016,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	 * Kicks a player from the server
 	 *
 	 * @param string $reason
-	 * @param bool $isAdmin
+	 * @param bool   $isAdmin
 	 *
 	 * @return bool
 	 */
@@ -3076,8 +3101,8 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	 * flag set to kick without the "Kicked by admin" part instead of this method.
 	 *
 	 * @param string $message Message to be broadcasted
-	 * @param string $reason Reason showed in console
-	 * @param bool $notify
+	 * @param string $reason  Reason showed in console
+	 * @param bool   $notify
 	 */
 	public final function close($message = "", $reason = "generic reason", $notify = true){
 
@@ -3208,7 +3233,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 		$message = "death.attack.generic";
 
 		$params = [
-			$this->getDisplayName()
+			$this->getDisplayName(),
 		];
 
 		$cause = $this->getLastDamageCause();
@@ -3544,8 +3569,8 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	 * Use teleport() for a delayed teleport after chunks have been sent.
 	 *
 	 * @param Vector3 $pos
-	 * @param float $yaw
-	 * @param float $pitch
+	 * @param float   $yaw
+	 * @param float   $pitch
 	 */
 	public function teleportImmediate(Vector3 $pos, $yaw = null, $pitch = null){
 		if(parent::teleport($pos, $yaw, $pitch)){
@@ -3584,7 +3609,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	 * Returns the created/existing window id
 	 *
 	 * @param Inventory $inventory
-	 * @param int $forceId
+	 * @param int       $forceId
 	 *
 	 * @return int
 	 */
