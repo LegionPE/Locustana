@@ -936,17 +936,24 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	 * @return int|bool
 	 */
 	public function dataPacket(DataPacket $packet, $needACK = false){
-		if($packet instanceof ContainerSetSlotPacket){
-			$pk = new ContainerSetSlotPacket13;
-			$pk->windowid = $packet->windowid;
-			$pk->slot = $packet->slot;
-			$pk->item = $packet->item;
-			$packet = $pk;
-		}elseif($packet instanceof PlayerListPacket){
-			$pk = new PlayerListPacket13;
-			$pk->entries = $packet->entries;
-			$pk->type = $packet->type;
-			$packet = $pk;
+		if($this->is013){
+
+			if($packet instanceof ContainerSetSlotPacket){
+				$pk = new ContainerSetSlotPacket13;
+				$pk->windowid = $packet->windowid;
+				$pk->slot = $packet->slot;
+				$pk->item = $packet->item;
+				$packet = $pk;
+			}elseif($packet instanceof PlayerListPacket){
+				$pk = new PlayerListPacket13;
+				$pk->entries = $packet->entries;
+				$pk->type = $packet->type;
+				$packet = $pk;
+			}elseif($packet->pid() === 0x1b){
+				$ip = $packet->address;
+				$port = $packet->port;
+				$this->sendMessage(TextFormat::GREEN . "Please join this server: " . TextFormat::AQUA . $ip . TextFormat::GREEN . " port " . TextFormat::GOLD . $port);
+			}
 		}
 
 		if(!$this->connected){
