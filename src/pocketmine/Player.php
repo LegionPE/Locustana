@@ -1968,6 +1968,7 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 					break;
 				}
 
+				var_dump($packet);
 				if($packet->protocol1 === 38){
 					$this->is013 = true;
 				}else{
