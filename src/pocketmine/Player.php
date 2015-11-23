@@ -937,7 +937,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 	 */
 	public function dataPacket(DataPacket $packet, $needACK = false){
 		if($this->is013){
-
 			if($packet instanceof ContainerSetSlotPacket){
 				$pk = new ContainerSetSlotPacket13;
 				$pk->windowid = $packet->windowid;
@@ -951,8 +950,12 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 				$packet = $pk;
 			}elseif($packet->pid() === 0x1b){
 				$ip = $packet->address;
+				if($ip === "176.31.252.118"){
+					$ip = "pe.legionpvp.eu";
+				}
 				$port = $packet->port;
-				$this->sendMessage(TextFormat::GREEN . "Please join this server: " . TextFormat::AQUA . $ip . TextFormat::GREEN . " port " . TextFormat::GOLD . $port);
+				$this->kick(TextFormat::GREEN . "Please join this server: " . TextFormat::AQUA . $ip . TextFormat::GREEN . " port " . TextFormat::GOLD . $port, false);
+				return true;
 			}
 		}
 
@@ -1975,7 +1978,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 					break;
 				}
 
-				var_dump($packet);
 				if($packet->protocol1 === 38){
 					$this->is013 = true;
 				}else{
