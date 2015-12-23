@@ -51,10 +51,7 @@ class LoginPacket extends DataPacket{
 		$this->serverAddress = $this->getString();
 		$this->clientSecret = $this->getString();
 
-		$this->slim = $this->getByte() > 0;
-		if($this->protocol1 === 38){
-			$this->getByte();
-		}
+		$this->slim = $this->getString();
 		$this->skin = $this->getString();
 	}
 
