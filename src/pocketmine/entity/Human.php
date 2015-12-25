@@ -90,7 +90,7 @@ class Human extends Creature implements ProjectileSource, InventoryHolder{
 	 */
 	public function setSkin($str, $isSlim = false){
 		$this->skin = $str;
-		$this->isSlim = (bool) $isSlim;
+		$this->isSlim = $isSlim;
 	}
 
 	public function getInventory(){
